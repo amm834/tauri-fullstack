@@ -4,6 +4,7 @@ import {invoke} from "@tauri-apps/api";
 const App = () => {
     const [message, setMessage] = useState('');
 
+
     async function sayHi() {
         const msg = await invoke('say_hi') as string;
         setMessage(msg);
@@ -14,8 +15,12 @@ const App = () => {
     const [msgWithName, setMsgWithName] = useState('');
 
     async function sayHiWithName() {
-        const msg = await invoke('say_hi_to', {name}) as string;
-        setMsgWithName(msg);
+        try {
+            const msg = await invoke('say_hi_to', {name}) as string;
+            setMsgWithName(msg);
+        } catch (e) {
+            setMsgWithName(e as string)
+        }
     }
 
     return (
@@ -25,7 +30,7 @@ const App = () => {
                 <button onClick={sayHi}>Say Hi</button>
             </div>
             <div>
-                <input onChange={e => setName(e.target.value)}/>
+                <input placeholder="Name" onChange={e => setName(e.target.value)}/>
                 <button onClick={sayHiWithName}>Say Hi</button>
                 <p>{msgWithName}</p>
             </div>
